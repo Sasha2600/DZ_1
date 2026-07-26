@@ -1,0 +1,65 @@
+./
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv
+venv
+env
+bin/
+lib/
+
+# Build and distribution
+build/
+dist/
+*.egg-info/
+develop-eggs=.eggs.distinfo
+dist/
+build/
+develop-eggs=.eggs.distinfo
+downloads/
+eggs/*.egg-info/
+.eggs/
+nosetests.xml
+nosetests.json
+.*.egg-info/
+
+# Environment variables and secrets
+.env
+*.env
+.secrets
+*.pem
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.sublime-project
+.project
+.settings/
+
+# Logs, temporary files, and local databases
+*.log
+*.tmp
+*.db
+*.sqlite3
+
+# Testing, linting, and formatting
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.cache/
+
+# System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+routellm-318923-d6633a/demo.py
+routellm-318923-d6633a/requirements.txt
+xgrammar-318923-16e436/main_hf.py
+xgrammar-318923-16e436/main_mlx.py
+xgrammar-318923-16e436/main.py
