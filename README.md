@@ -11,7 +11,7 @@
 - Пакеты `openai` и `python-dotenv`:
 
   ```bash
-  pip install openai python-dotenv
+  pip install -r requirements.txt
   ```
 
 - Запущенный LM Studio с включённым Local Server (по умолчанию порт 1234).
