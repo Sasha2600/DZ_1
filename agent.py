@@ -305,7 +305,10 @@ def validate_grounding(model: str, answer: str, context_docs: list[RetrievedDoc]
 
 def run_agent(query: str) -> AgentResult:
     cycle_start = time.monotonic()
-    seen_queries: set[str] = set()
+    # Отслеживаем состояние агента (ответ + модель), а не исходный запрос.
+    # Это позволяет разным моделям обрабатывать один и тот же запрос,
+    # а зацикливание фиксируется только при повторении ответа от той же модели.
+    seen_states: set[tuple[str, str]] = set()
     used_advanced_model = False
 
     # --- REASON (guardrail) ---
@@ -326,17 +329,6 @@ def run_agent(query: str) -> AgentResult:
                 iterations_used=iteration,
                 escalation_reason="cycle_timeout",
             )
-
-        # --- Защита от Dead Loop: повтор идентичного запроса ---
-        normalized = query.strip().lower()
-        if normalized in seen_queries:
-            return AgentResult(
-                outcome=Outcome.ESCALATED,
-                message="Не удалось найти ответ, передаю оператору.",
-                iterations_used=iteration,
-                escalation_reason="duplicate_query_detected",
-            )
-        seen_queries.add(normalized)
 
         # --- ACT: retrieval ---
         docs = retrieve_context(query)
@@ -372,6 +364,17 @@ def run_agent(query: str) -> AgentResult:
 
         # --- ACT: генерация ответа ---
         answer = generate_answer(model_for_answer, query, docs)
+
+        # --- Защита от Dead Loop: повтор состояния (ответ + модель) ---
+        state = (answer, model_for_answer)
+        if state in seen_states:
+            return AgentResult(
+                outcome=Outcome.ESCALATED,
+                message="Не удалось сформировать новый ответ, передаю оператору.",
+                iterations_used=iteration,
+                escalation_reason="repeated_agent_state",
+            )
+        seen_states.add(state)
 
         # --- OBSERVE: grounding-валидация ---
         validation = validate_grounding(model_for_validation, answer, docs)

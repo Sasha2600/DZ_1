@@ -7,14 +7,56 @@
 
 ## Требования
 
-- Python 3.14
-- Пакеты `openai` и `python-dotenv`:
-
-  ```bash
-  pip install -r requirements.txt
-  ```
-
+- Python 3.12+
 - Запущенный LM Studio с включённым Local Server (по умолчанию порт 1234).
+
+## Настройка проекта
+
+Перейдите в корневую директорию проекта:
+
+```bash
+cd DZ_1
+```
+
+### 1. Создание виртуального окружения
+
+Изолированное окружение предотвращает конфликты пакетов с глобальной средой Python.
+
+**Windows:**
+
+```powershell
+python -m venv .venv
+```
+
+**Linux/macOS:**
+
+```bash
+python3 -m venv .venv
+```
+
+### 2. Активация виртуального окружения
+
+**Windows:**
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+**Linux/macOS:**
+
+```bash
+source .venv/bin/activate
+```
+
+После активации в командной строке отобразится префикс `(.venv)`.
+
+### 3. Установка зависимостей
+
+Установите пакеты `openai` и `python-dotenv` из файла [`requirements.txt`](requirements.txt):
+
+```bash
+pip install -r requirements.txt
+```
 
 ## Настройка
 
@@ -78,5 +120,6 @@ python agent.py
   - лимит итераций (`MAX_ITERATIONS`);
   - таймаут на весь цикл (`TOTAL_CYCLE_TIMEOUT_SECONDS`);
   - таймаут на отдельный вызов модели (`REQUEST_TIMEOUT_SECONDS`);
-  - обнаружение повторяющегося запроса (защита от зацикливания);
+  - обнаружение повторяющегося **состояния агента** (ответ + модель) — зацикливание фиксируется только при повторении ответа от той же модели, что позволяет разным
+    моделям (CHEAP → ADVANCED) обрабатывать один и тот же запрос;
   - грубый лимит токенов диалога (`MAX_DIALOG_TOKENS_APPROX`).
